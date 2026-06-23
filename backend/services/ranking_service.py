@@ -45,4 +45,6 @@ async def get_global_rankings() -> List[Dict[str, Any]]:
     
     # Add rank number
     for i, item in enumerate(rankings):
-        item["rank"] = i
+        item["rank"] = i + 1
+        
+    return rankings
