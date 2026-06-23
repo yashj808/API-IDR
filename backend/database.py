@@ -58,4 +58,5 @@ async def init_db():
         await db.execute("CREATE INDEX IF NOT EXISTS idx_summaries_volume ON user_summaries(total_volume DESC);")
         
         await db.commit()
-    
+    finally:
+        await db.close()
