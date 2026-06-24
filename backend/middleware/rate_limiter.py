@@ -32,7 +32,12 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         return True
 
     async def dispatch(self, request: Request, call_next):
-        client_ip = request.client.host if request.client else "unknown"
+        # Retrieve client IP behind proxies to prevent IP spoofing or limiter bypass
+        forwarded_for = request.headers.get("X-Forwarded-For")
+        if forwarded_for:
+            client_ip = forwarded_for.split(",")[0].strip()
+        else:
+            client_ip = request.client.host if request.client else "unknown"
         current_time = time.time()
 
         # 1. Global limit check
