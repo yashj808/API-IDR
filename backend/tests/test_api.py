@@ -195,3 +195,26 @@ def test_ranking_currency_conversions(client):
     index_jpy = next(i for i, r in enumerate(filtered) if r["userId"] == user_jpy)
     
     assert index_gbp < index_jpy
+
+def test_input_validation_hardening(client):
+    # 1. Invalid User ID in GET /summary/{userId} (returns 400 Bad Request)
+    res_summary_bad = client.get("/summary/invalid-user-name!")
+    assert res_summary_bad.status_code == 400
+    assert "Invalid User ID format" in res_summary_bad.json()["detail"]
+
+    # 2. Too short User ID in GET /summary/{userId}
+    res_summary_short = client.get("/summary/us")
+    assert res_summary_short.status_code == 400
+
+    # 3. Invalid User ID in POST /test/concurrent
+    res_test_bad_user = client.post("/test/concurrent?user_id=bad-user-name!&count=5")
+    assert res_test_bad_user.status_code == 400
+
+    # 4. Out of range count (>50) in POST /test/concurrent
+    res_test_large_count = client.post("/test/concurrent?user_id=valid_user&count=100")
+    assert res_test_large_count.status_code == 400
+    assert "between 1 and 50" in res_test_large_count.json()["detail"]
+
+    # 5. Out of range count (<1) in POST /test/concurrent
+    res_test_zero_count = client.post("/test/concurrent?user_id=valid_user&count=0")
+    assert res_test_zero_count.status_code == 400
