@@ -31,7 +31,7 @@ function App() {
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 className="gradient-text text-glow" style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>
-              ⚡ Antigravity Financial Ledger
+              ⚡ Secure Financial Ledger
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
               Idempotent & Concurrency-Safe Transaction Engine
@@ -112,7 +112,7 @@ function App() {
           color: 'var(--text-muted)'
         }}
       >
-        Antigravity Financial API Dashboard • High-Performance Systems Assignment
+        Secure Financial Ledger Dashboard • Developed by Yash Jogdand (yashjogdandyj@gmail.com)
       </footer>
     </div>
   );

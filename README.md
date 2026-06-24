@@ -1,6 +1,6 @@
-# Antigravity Financial Ledger ⚡
+# Secure Financial Ledger ⚡
 
-A real-time, high-performance financial transaction processor featuring strict idempotency guarantees, concurrent-safe SQLite WAL transaction serializations, and a hybrid multi-factor leaderboard ranking dashboard.
+A real-time, high-performance financial transaction processor featuring strict idempotency guarantees, concurrent-safe SQLite WAL transaction serializations, and a hybrid multi-factor leaderboard ranking dashboard. Created by Yash Jogdand (yashjogdandyj@gmail.com).
 
 ---
 
