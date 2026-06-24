@@ -1,6 +1,7 @@
 import asyncio
+import re
 import uuid
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from backend.models import TransactionCreate
 from backend.services.transaction_service import process_transaction
 
@@ -16,6 +17,16 @@ async def test_concurrent(user_id: str, count: int = 10, amount: float = 10.0, u
     If 'use_same_key' is True, all requests share the same idempotency key.
     Otherwise, they use unique keys.
     """
+    if count < 1 or count > 50:
+        raise HTTPException(
+            status_code=400,
+            detail="Concurrency count must be between 1 and 50 to prevent Denial of Service."
+        )
+    if not re.match(r"^[a-zA-Z0-9_]{3,50}$", user_id):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid User ID format. Must be 3-50 alphanumeric characters or underscores."
+        )
     shared_key = f"test-concurrent-shared-{uuid.uuid4().hex[:8]}"
     
     async def task(index: int):
