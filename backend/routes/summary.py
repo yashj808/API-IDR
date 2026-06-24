@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+import re
 from backend.database import get_db
 from backend.models import UserSummaryResponse
 
@@ -13,6 +14,11 @@ async def get_summary(userId: str):
     """
     Retrieves summary for the specified userId.
     """
+    if not re.match(r"^[a-zA-Z0-9_]{3,50}$", userId):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid User ID format. Must be 3-50 alphanumeric characters or underscores."
+        )
     db = await get_db()
     try:
         async with db.execute(
