@@ -38,8 +38,8 @@ export default function Leaderboard({ onSelectUser, refreshTrigger }) {
   return (
     <div className="glass-panel animate-fade-in" style={{ height: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontWeight: 700 }} className="text-glow">
-          🏆 Global Leaderboard
+        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+          Global Leaderboard
         </h2>
         <button 
           className="btn btn-secondary" 
@@ -47,7 +47,7 @@ export default function Leaderboard({ onSelectUser, refreshTrigger }) {
           style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
           disabled={loading}
         >
-          🔄 Refresh
+          Refresh
         </button>
       </div>
 
@@ -135,7 +135,7 @@ export default function Leaderboard({ onSelectUser, refreshTrigger }) {
                           style={{ 
                             width: `${Math.min(item.score, 100)}%`, 
                             height: '100%', 
-                            background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-purple))',
+                            background: 'var(--accent-blue)',
                             borderRadius: '2px' 
                           }}
                         />

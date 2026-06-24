@@ -83,8 +83,8 @@ export default function TransactionForm({ onTransactionSuccess, activeUserId, se
 
   return (
     <div className="glass-panel animate-fade-in" style={{ height: '100%' }}>
-      <h2 style={{ marginBottom: '1.5rem', fontWeight: 700 }} className="text-glow">
-        💳 Transaction Simulator
+      <h2 style={{ fontSize: '1rem', marginBottom: '1.25rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+        Transaction Simulator
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -150,7 +150,7 @@ export default function TransactionForm({ onTransactionSuccess, activeUserId, se
               }}
               onClick={refreshKey}
             >
-              🔄 Regenerate
+              Regenerate
             </button>
           </label>
           <input
@@ -169,7 +169,7 @@ export default function TransactionForm({ onTransactionSuccess, activeUserId, se
           disabled={loading}
           style={{ width: '100%', marginTop: '0.5rem' }}
         >
-          {loading ? 'Processing...' : '⚡ Submit Transaction'}
+          {loading ? 'Processing...' : 'Submit Transaction'}
         </button>
       </form>
 
@@ -191,8 +191,8 @@ export default function TransactionForm({ onTransactionSuccess, activeUserId, se
         >
           <div style={{ fontWeight: 600, color: result.ok ? 'var(--accent-emerald)' : 'var(--accent-rose)', marginBottom: '0.25rem' }}>
             {result.ok 
-              ? (result.status === 200 ? '✅ 200 OK (Idempotent Replay)' : '🎉 201 Created (Success)') 
-              : `❌ Error (${result.status})`
+              ? (result.status === 200 ? 'Status: 200 OK (Idempotent Replay)' : 'Status: 201 Created (Success)') 
+              : `Status: Error (${result.status})`
             }
           </div>
           <div style={{ color: 'var(--text-primary)', wordBreak: 'break-all', fontFamily: 'monospace', fontSize: '0.8rem' }}>

@@ -31,17 +31,17 @@ function App() {
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 className="gradient-text text-glow" style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>
-              ⚡ Secure Financial Ledger
+              Secure Financial Ledger
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
               Idempotent & Concurrency-Safe Transaction Engine
             </p>
           </div>
           <div style={{ display: 'flex', gap: '0.8rem' }}>
-            <span style={{ fontSize: '0.75rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', color: 'var(--accent-emerald)', padding: '0.35rem 0.75rem', borderRadius: '12px', fontWeight: 600 }}>
-              ● Engine Live
+            <span style={{ fontSize: '0.75rem', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.15)', color: 'var(--accent-emerald)', padding: '0.35rem 0.75rem', borderRadius: '4px', fontWeight: 600 }}>
+              Engine Live
             </span>
-            <span style={{ fontSize: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)', color: 'var(--accent-blue)', padding: '0.35rem 0.75rem', borderRadius: '12px', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.75rem', background: 'rgba(37, 99, 235, 0.05)', border: '1px solid rgba(37, 99, 235, 0.15)', color: '#60a5fa', padding: '0.35rem 0.75rem', borderRadius: '4px', fontWeight: 600 }}>
               SQLite WAL Active
             </span>
           </div>

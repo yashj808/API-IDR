@@ -37,8 +37,8 @@ export default function ConcurrencyTester({ onTestCompleted, activeUserId }) {
 
   return (
     <div className="glass-panel animate-fade-in" style={{ height: '100%' }}>
-      <h2 style={{ marginBottom: '1.25rem', fontWeight: 700 }} className="text-glow">
-        🧪 Concurrency & Idempotency Lab
+      <h2 style={{ fontSize: '1rem', marginBottom: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+        Concurrency & Idempotency Lab
       </h2>
       <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: '1.4' }}>
         Stress-test database race condition handling and key deduplication in real time.
@@ -51,7 +51,7 @@ export default function ConcurrencyTester({ onTestCompleted, activeUserId }) {
           disabled={loading}
           style={{ fontSize: '0.85rem', padding: '0.85rem 0.5rem' }}
         >
-          🚀 10x Concurrent Writes
+          10x Concurrent Writes
           <div style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.8, marginTop: '2px' }}>
             Unique keys (Lock test)
           </div>
@@ -63,7 +63,7 @@ export default function ConcurrencyTester({ onTestCompleted, activeUserId }) {
           disabled={loading}
           style={{ fontSize: '0.85rem', padding: '0.85rem 0.5rem' }}
         >
-          🔒 10x Concurrent Replays
+          10x Concurrent Replays
           <div style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.8, marginTop: '2px' }}>
             Shared key (Deduplication)
           </div>
