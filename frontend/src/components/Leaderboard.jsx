@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { fetchRanking } from '../api/client';
 
+const getCurrencySymbol = (currency) => {
+  switch (currency) {
+    case 'GBP': return '£';
+    case 'EUR': return '€';
+    case 'INR': return '₹';
+    case 'JPY': return '¥';
+    case 'USD': return '$';
+    default: return '$';
+  }
+};
+
 export default function Leaderboard({ onSelectUser, refreshTrigger }) {
   const [loading, setLoading] = useState(false);
   const [rankings, setRankings] = useState([]);
@@ -111,7 +122,7 @@ export default function Leaderboard({ onSelectUser, refreshTrigger }) {
                     </div>
                   </td>
                   <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right', fontWeight: 600, fontFamily: 'monospace' }}>
-                    ${item.totalVolume.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    {getCurrencySymbol(item.currency)}{item.totalVolume.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </td>
                   <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
                     {item.transactionCount}

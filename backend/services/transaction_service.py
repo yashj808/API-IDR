@@ -78,13 +78,13 @@ async def process_transaction(idempotency_key: str, payload: TransactionCreate) 
             new_volume = summary["total_volume"] + amount
             new_count = summary["transaction_count"] + 1
             await db.execute(
-                "UPDATE user_summaries SET total_volume = ?, transaction_count = ?, updated_at = ? WHERE user_id = ?",
-                (new_volume, new_count, now_str, user_id)
+                "UPDATE user_summaries SET total_volume = ?, transaction_count = ?, currency = ?, updated_at = ? WHERE user_id = ?",
+                (new_volume, new_count, currency, now_str, user_id)
             )
         else:
             await db.execute(
-                "INSERT INTO user_summaries (user_id, total_volume, transaction_count, updated_at) VALUES (?, ?, ?, ?)",
-                (user_id, amount, 1, now_str)
+                "INSERT INTO user_summaries (user_id, total_volume, transaction_count, currency, updated_at) VALUES (?, ?, ?, ?, ?)",
+                (user_id, amount, 1, currency, now_str)
             )
 
         # Record the transaction

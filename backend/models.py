@@ -51,6 +51,7 @@ class UserSummaryResponse(BaseModel):
     totalVolume: float
     transactionCount: int
     averageAmount: float
+    currency: str
     lastUpdated: str
 
 class LeaderboardItem(BaseModel):
@@ -58,6 +59,7 @@ class LeaderboardItem(BaseModel):
     userId: str
     totalVolume: float
     transactionCount: int
+    currency: str
     score: float
 
 class LeaderboardResponse(BaseModel):

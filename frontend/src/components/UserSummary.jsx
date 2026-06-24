@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { fetchSummary } from '../api/client';
 
+const getCurrencySymbol = (currency) => {
+  switch (currency) {
+    case 'GBP': return '£';
+    case 'EUR': return '€';
+    case 'INR': return '₹';
+    case 'JPY': return '¥';
+    case 'USD': return '$';
+    default: return '$';
+  }
+};
+
 export default function UserSummary({ userId }) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -61,9 +72,10 @@ export default function UserSummary({ userId }) {
   }
 
   // Determine displays to avoid structural jumps
-  const totalVolumeStr = data ? `$${data.totalVolume.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : (loading ? '...' : '$0.00');
+  const symbol = data ? getCurrencySymbol(data.currency) : '$';
+  const totalVolumeStr = data ? `${symbol}${data.totalVolume.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : (loading ? '...' : '$0.00');
   const countStr = data ? data.transactionCount : (loading ? '...' : '0');
-  const averageStr = data ? `$${data.averageAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : (loading ? '...' : '$0.00');
+  const averageStr = data ? `${symbol}${data.averageAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : (loading ? '...' : '$0.00');
   const timestampStr = data ? new Date(data.lastUpdated).toLocaleTimeString() : null;
 
   return (

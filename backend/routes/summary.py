@@ -16,7 +16,7 @@ async def get_summary(userId: str):
     db = await get_db()
     try:
         async with db.execute(
-            "SELECT total_volume, transaction_count, updated_at FROM user_summaries WHERE user_id = ?",
+            "SELECT total_volume, transaction_count, currency, updated_at FROM user_summaries WHERE user_id = ?",
             (userId,)
         ) as cursor:
             row = await cursor.fetchone()
@@ -36,6 +36,7 @@ async def get_summary(userId: str):
             "totalVolume": round(total_volume, 2),
             "transactionCount": count,
             "averageAmount": round(average, 2),
+            "currency": row["currency"] or "USD",
             "lastUpdated": row["updated_at"]
         }
     finally:

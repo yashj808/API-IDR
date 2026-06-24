@@ -22,7 +22,7 @@ async def get_global_rankings() -> List[Dict[str, Any]]:
     """
     db = await get_db()
     try:
-        async with db.execute("SELECT user_id, total_volume, transaction_count FROM user_summaries") as cursor:
+        async with db.execute("SELECT user_id, total_volume, transaction_count, currency FROM user_summaries") as cursor:
             rows = await cursor.fetchall()
     finally:
         await db.close()
@@ -37,6 +37,7 @@ async def get_global_rankings() -> List[Dict[str, Any]]:
             "userId": user_id,
             "totalVolume": volume,
             "transactionCount": count,
+            "currency": row["currency"] or "USD",
             "score": score
         })
     
