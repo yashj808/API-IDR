@@ -54,9 +54,15 @@ $$\text{Score} = (0.6 \times \text{VolumeScore}) + (0.4 \times \text{Consistency
   - If a request is received with a duplicate key but a *mismatched* body, the engine returns a `409 Conflict` error to prevent replays.
 
 ### 4. Sliding-Window Rate Limiting
-- The backend incorporates an IP-based sliding window rate limiter:
-  - **Global Route Limit:** Max 100 requests/minute.
+- The backend incorporates a proxy-aware IP-based sliding window rate limiter:
+  - Extracts client IP correctly behind reverse proxies (reading `X-Forwarded-For` headers) to prevent rate-limiter bypass and proxy-starvation.
+  - **Global Route Limit:** Max 100 requests/minute per client IP.
   - **Transaction Submission Limit:** Max 20 requests/minute (applied strictly to `POST /transaction`).
+
+### 5. Input Sanitization & Denial of Service (DoS) Hardening
+- **Path Parameter Validation**: Paths like `GET /summary/{userId}` are sanitized against regex `^[a-zA-Z0-9_]{3,50}$` to reject malformed inputs before database queries.
+- **Simulator Concurrency Cap**: Restricts simulation runs (`POST /test/concurrent`) to a maximum of 50 concurrent requests per execution to prevent thread pool exhaustion and server crashes.
+- **SQL Parameterization**: All DB queries use strict parameterized bindings to block SQL Injection (SQLi) attacks.
 
 ---
 
