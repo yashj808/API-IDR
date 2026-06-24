@@ -58,6 +58,7 @@ class LeaderboardItem(BaseModel):
     rank: int
     userId: str
     totalVolume: float
+    totalVolumeUsd: float
     transactionCount: int
     currency: str
     score: float

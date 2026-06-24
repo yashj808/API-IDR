@@ -48,6 +48,7 @@ async def init_db():
             CREATE TABLE IF NOT EXISTS user_summaries (
                 user_id TEXT PRIMARY KEY,
                 total_volume REAL DEFAULT 0.0,
+                total_volume_usd REAL DEFAULT 0.0,
                 transaction_count INTEGER DEFAULT 0,
                 currency TEXT DEFAULT 'USD',
                 updated_at TEXT DEFAULT (datetime('now'))
@@ -56,13 +57,25 @@ async def init_db():
 
         # Create indexes
         await db.execute("CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions(user_id);")
-        await db.execute("CREATE INDEX IF NOT EXISTS idx_summaries_volume ON user_summaries(total_volume DESC);")
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_summaries_volume ON user_summaries(total_volume_usd DESC);")
         
         await db.commit()
 
         # Schema migration fallback for existing databases
         try:
             await db.execute("ALTER TABLE user_summaries ADD COLUMN currency TEXT DEFAULT 'USD';")
+            await db.commit()
+        except Exception:
+            pass
+
+        try:
+            await db.execute("ALTER TABLE user_summaries ADD COLUMN total_volume_usd REAL DEFAULT 0.0;")
+            await db.commit()
+        except Exception:
+            pass
+
+        try:
+            await db.execute("UPDATE user_summaries SET total_volume_usd = total_volume WHERE total_volume_usd IS NULL OR total_volume_usd = 0.0;")
             await db.commit()
         except Exception:
             pass

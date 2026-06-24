@@ -6,6 +6,14 @@ from fastapi import HTTPException
 from backend.database import get_db
 from backend.models import TransactionCreate
 
+EXCHANGE_RATES_TO_USD = {
+    "USD": 1.0,
+    "EUR": 1.08,
+    "GBP": 1.27,
+    "INR": 0.012,
+    "JPY": 0.0063
+}
+
 def generate_request_hash(payload: TransactionCreate) -> str:
     """
     Generates a deterministic SHA-256 hash of the transaction creation payload.
@@ -25,6 +33,7 @@ async def process_transaction(idempotency_key: str, payload: TransactionCreate) 
     user_id = payload.userId
     amount = payload.amount
     currency = payload.currency
+    amount_usd = amount * EXCHANGE_RATES_TO_USD.get(currency.upper(), 1.0)
 
     # Connect to the DB
     db = await get_db()
@@ -69,22 +78,26 @@ async def process_transaction(idempotency_key: str, payload: TransactionCreate) 
         # Upsert user summary
         # Get existing summary
         async with db.execute(
-            "SELECT total_volume, transaction_count FROM user_summaries WHERE user_id = ?",
+            "SELECT total_volume, total_volume_usd, transaction_count FROM user_summaries WHERE user_id = ?",
             (user_id,)
         ) as cursor:
             summary = await cursor.fetchone()
 
         if summary is not None:
             new_volume = summary["total_volume"] + amount
+            existing_volume_usd = summary["total_volume_usd"] if "total_volume_usd" in summary.keys() else summary["total_volume"]
+            if existing_volume_usd is None:
+                existing_volume_usd = 0.0
+            new_volume_usd = existing_volume_usd + amount_usd
             new_count = summary["transaction_count"] + 1
             await db.execute(
-                "UPDATE user_summaries SET total_volume = ?, transaction_count = ?, currency = ?, updated_at = ? WHERE user_id = ?",
-                (new_volume, new_count, currency, now_str, user_id)
+                "UPDATE user_summaries SET total_volume = ?, total_volume_usd = ?, transaction_count = ?, currency = ?, updated_at = ? WHERE user_id = ?",
+                (new_volume, new_volume_usd, new_count, currency, now_str, user_id)
             )
         else:
             await db.execute(
-                "INSERT INTO user_summaries (user_id, total_volume, transaction_count, currency, updated_at) VALUES (?, ?, ?, ?, ?)",
-                (user_id, amount, 1, currency, now_str)
+                "INSERT INTO user_summaries (user_id, total_volume, total_volume_usd, transaction_count, currency, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+                (user_id, amount, amount_usd, 1, currency, now_str)
             )
 
         # Record the transaction

@@ -159,3 +159,39 @@ def test_ranking_and_concurrency(client):
     # Assert at least our user is present
     user_ids = [r["userId"] for r in rank_data["rankings"]]
     assert user_id in user_ids
+
+def test_ranking_currency_conversions(client):
+    user_gbp = f"gbp_user_{uuid.uuid4().hex[:4]}"
+    user_jpy = f"jpy_user_{uuid.uuid4().hex[:4]}"
+
+    # Submit GBP 100.00 for user_gbp -> USD value is 127.00
+    res_gbp = client.post(
+        "/transaction",
+        json={"userId": user_gbp, "amount": 100.00, "currency": "GBP"},
+        headers={"Idempotency-Key": f"key_gbp_{uuid.uuid4().hex}"}
+    )
+    assert res_gbp.status_code == 201
+
+    # Submit JPY 10000.00 for user_jpy -> USD value is 63.00
+    res_jpy = client.post(
+        "/transaction",
+        json={"userId": user_jpy, "amount": 10000.00, "currency": "JPY"},
+        headers={"Idempotency-Key": f"key_jpy_{uuid.uuid4().hex}"}
+    )
+    assert res_jpy.status_code == 201
+
+    # Fetch global rankings
+    res = client.get("/ranking")
+    assert res.status_code == 200
+    rankings = res.json()["rankings"]
+
+    # Filter out other users from rankings list to focus on these two
+    filtered = [r for r in rankings if r["userId"] in (user_gbp, user_jpy)]
+    assert len(filtered) == 2
+
+    # Since user_gbp volume in USD is 127.00 and user_jpy is 63.00,
+    # user_gbp must rank HIGHER than user_jpy (lower index in sorted list)
+    index_gbp = next(i for i, r in enumerate(filtered) if r["userId"] == user_gbp)
+    index_jpy = next(i for i, r in enumerate(filtered) if r["userId"] == user_jpy)
+    
+    assert index_gbp < index_jpy

@@ -22,7 +22,7 @@ async def get_global_rankings() -> List[Dict[str, Any]]:
     """
     db = await get_db()
     try:
-        async with db.execute("SELECT user_id, total_volume, transaction_count, currency FROM user_summaries") as cursor:
+        async with db.execute("SELECT user_id, total_volume, total_volume_usd, transaction_count, currency FROM user_summaries") as cursor:
             rows = await cursor.fetchall()
     finally:
         await db.close()
@@ -31,18 +31,22 @@ async def get_global_rankings() -> List[Dict[str, Any]]:
     for row in rows:
         user_id = row["user_id"]
         volume = row["total_volume"]
+        volume_usd = row["total_volume_usd"] if "total_volume_usd" in row.keys() else row["total_volume"]
+        if volume_usd is None:
+            volume_usd = 0.0
         count = row["transaction_count"]
-        score = calculate_score(volume, count)
+        score = calculate_score(volume_usd, count)
         rankings.append({
             "userId": user_id,
             "totalVolume": volume,
+            "totalVolumeUsd": volume_usd,
             "transactionCount": count,
             "currency": row["currency"] or "USD",
             "score": score
         })
     
-    # Sort by score descending, secondary sort by totalVolume descending, then transactionCount descending
-    rankings.sort(key=lambda x: (-x["score"], -x["totalVolume"], -x["transactionCount"]))
+    # Sort by score descending, secondary sort by totalVolumeUsd descending, then transactionCount descending
+    rankings.sort(key=lambda x: (-x["score"], -x["totalVolumeUsd"], -x["transactionCount"]))
     
     # Add rank number
     for i, item in enumerate(rankings):
